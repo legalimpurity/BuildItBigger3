@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.jokeProvider;
 import com.legalimpurity.jokedisplayer.JokeDisplayerActivity;
 
 
@@ -43,11 +42,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        Intent newJokeIntent = new Intent(this,JokeDisplayerActivity.class);
-        Bundle extrasForJoke = new Bundle();
-        extrasForJoke.putString(JokeDisplayerActivity.JOKE_KEY,jokeProvider.getJoke());
-        newJokeIntent.putExtras(extrasForJoke);
-        startActivity(newJokeIntent);
+        new jokeEndpoint(new callbackInterface() {
+            @Override
+            public void onJokeLoaded(String joke) {
+                Intent newJokeIntent = new Intent(MainActivity.this,JokeDisplayerActivity.class);
+                Bundle extrasForJoke = new Bundle();
+                extrasForJoke.putString(JokeDisplayerActivity.JOKE_KEY,joke);
+                newJokeIntent.putExtras(extrasForJoke);
+                startActivity(newJokeIntent);
+            }
+        }).execute();
     }
 
 
